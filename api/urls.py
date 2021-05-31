@@ -19,5 +19,8 @@ urlpatterns = router.urls + [
     path("set-csrf-token/", set_csrf_token),
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("get-user/", UserView.as_view(), name="get_user")
+    path("get-user/", UserView.as_view(), name="get_user"),
+    path("login/", login_view, name="login"),
+    path("check-user/", is_logged_in, name="check_user"),
+    path("logout/", logout_view, name="logout"),
 ]
