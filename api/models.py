@@ -26,7 +26,7 @@ class Employee(models.Model):
 
 class RegisteredStaff(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
-    staff_id = models.IntegerField()
+    staff_id = models.CharField(max_length=30)
     
     gender = models.CharField(max_length=20, choices=(
         ("male", "男"),
@@ -40,7 +40,6 @@ class RegisteredStaff(models.Model):
     birth_date = models.DateField()
     
     registered_date = models.DateField(default=datetime.date.today)
-    interviewed_by = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=True)
     
     telephone_number = models.CharField(max_length=30)

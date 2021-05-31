@@ -3,6 +3,15 @@ from rest_framework import serializers
 from api.models import *
 
 
+class MyUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = [
+            "username",
+            "is_staff"
+        ]
+    
+    
 class GenderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gender
@@ -25,9 +34,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 
 class RegisteredStaffSerializer(serializers.ModelSerializer):
-    interviewed_by = EmployeeSerializer(read_only=True)
-    interviewed_by_uuid = serializers.PrimaryKeyRelatedField(queryset=Employee.objects.all(), write_only=True, source="interviewed_by")
-    
     class Meta:
         model = RegisteredStaff
         fields = [
@@ -40,8 +46,6 @@ class RegisteredStaffSerializer(serializers.ModelSerializer):
             "first_name_kana",
             "birth_date",
             "registered_date",
-            "interviewed_by",
-            "interviewed_by_uuid",
             "is_active",
             "telephone_number",
             "email_address"
