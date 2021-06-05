@@ -53,7 +53,7 @@ DATABASES = {
     'default': dj_database_url.config()
 }
 
-DEBUG = False
+DEBUG = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
