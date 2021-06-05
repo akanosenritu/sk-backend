@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import django_heroku
 from pathlib import Path
 import os
 import environ
@@ -146,3 +147,6 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env("GOOGLE_ACCOUNT_NAME")
 EMAIL_HOST_PASSWORD = env("GOOGLE_ACCOUNT_PASSWORD")
+
+# activate django-heroku
+django_heroku.settings(locals())
