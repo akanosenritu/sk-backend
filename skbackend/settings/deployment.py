@@ -146,7 +146,6 @@ EMAIL_HOST_USER = env("GOOGLE_ACCOUNT_NAME")
 EMAIL_HOST_PASSWORD = env("GOOGLE_ACCOUNT_PASSWORD")
 
 STATIC_ROOT = "/static/"
-STATIC_URL = "/static/"
 
 # activate django-heroku
 django_heroku.settings(locals())
