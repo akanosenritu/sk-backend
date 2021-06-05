@@ -46,7 +46,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "api.MyUser"
 
 CORS_ALLOWED_ORIGINS = [
-    "https://sk-frontend.vercel.app/"
+    "https://sk-frontend.vercel.app"
 ]
 
 DATABASES = {
