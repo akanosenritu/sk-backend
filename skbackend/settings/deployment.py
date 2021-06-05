@@ -49,6 +49,10 @@ CORS_ALLOWED_ORIGINS = [
     "https://sk-frontend.vercel.app"
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "vercel.app",
+]
+
 DATABASES = {
     'default': dj_database_url.config()
 }
