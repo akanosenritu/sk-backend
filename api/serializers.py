@@ -182,3 +182,30 @@ class EventSerializer(serializers.ModelSerializer):
             "position_groups",
             "position_group_uuids"
         ]
+
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    staff = RegisteredStaffSerializer(read_only=True)
+    staff_uuid = serializers.PrimaryKeyRelatedField(
+        queryset=RegisteredStaff.objects.all(),
+        source="staff",
+        write_only=True
+    )
+    event = EventSerializer(read_only=True)
+    event_uuid = serializers.PrimaryKeyRelatedField(
+        queryset=Event.objects.all(),
+        source="event",
+        write_only=True
+    )
+    
+    class Meta:
+        model = Application
+        fields = [
+            "uuid",
+            "staff",
+            "staff_uuid",
+            "applied_at_date",
+            "applied_to_date",
+            "event",
+            "event_uuid",
+        ]

@@ -98,3 +98,16 @@ class Event(models.Model):
     #  person_assigned_to = models.CharField(max_length=250)
     
     position_groups = models.ManyToManyField(PositionGroup, related_name="event")
+
+
+class Application(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
+    # staff that made the application
+    staff = models.ForeignKey(RegisteredStaff, on_delete=models.CASCADE)
+    
+    # date at which the application was made.
+    applied_at_date = models.DateField(auto_created=True)
+    # date at which the applicant wants to work
+    applied_to_date = models.DateField()
+    # event that the applicant wants to work at
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)

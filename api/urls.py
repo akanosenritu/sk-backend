@@ -23,4 +23,5 @@ urlpatterns = router.urls + [
     path("login/", login_view, name="login"),
     path("check-user/", is_logged_in, name="check_user"),
     path("logout/", logout_view, name="logout"),
+    path("available-staffs/", AvailableStaffsView.as_view(), name="available staffs")
 ]

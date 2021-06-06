@@ -9,6 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from rest_framework import viewsets, status, views, permissions
 from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
 from api.filters import EventFilter
 from api.models import *
@@ -117,3 +118,21 @@ def logout_view(request):
     return JsonResponse(
         {"detail": "success"}
     )
+
+
+class AvailableStaffsView(views.APIView):
+    def get(self, request):
+        dates = request.query_params.getlist("date", None)
+        if not dates:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        try:
+            dates = [datetime.date.fromisoformat(date) for date in dates]
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        result = dict()
+        for date in dates:
+            queryset = RegisteredStaff.objects.exclude(position__date=date)
+            serializer = RegisteredStaffSerializer(queryset, many=True)
+            result[date.isoformat()] = serializer.data
+        return Response(result)
