@@ -209,3 +209,64 @@ class ApplicationSerializer(serializers.ModelSerializer):
             "event",
             "event_uuid",
         ]
+
+
+class MailSerializer(serializers.ModelSerializer):
+    sender = MyUserSerializer(read_only=True)
+    recipient = RegisteredStaffSerializer(read_only=True)
+    
+    class Meta:
+        model = Mail
+        fields = [
+            "uuid",
+            "sender",
+            "recipient",
+            "recipient_uuid",
+            "is_sent",
+            "send_at_datetime",
+            "content"
+        ]
+        
+
+class MailTemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MailTemplate
+        fields = [
+            "uuid",
+            "name",
+            "template",
+        ]
+        
+        
+class MailsForEventSerializer(serializers.ModelSerializer):
+    event = EventSerializer(read_only=True)
+    event_uuid = serializers.PrimaryKeyRelatedField(
+        queryset=Event.objects.all(),
+        source="event",
+        write_only=True,
+    )
+    default_template = MailTemplateSerializer(read_only=True)
+    default_template_uuid = serializers.PrimaryKeyRelatedField(
+        queryset=MailTemplate.objects.all(),
+        source="default_template",
+        write_only=True,
+    )
+    mails = MailSerializer(many=True, read_only=True)
+    mail_uuids = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Mail.objects.all(),
+        source="mails",
+        write_only=True,
+    )
+    
+    class Meta:
+        model = MailsForEvent
+        fields = [
+            "uuid",
+            "event",
+            "event_uuid",
+            "default_template",
+            "default_template_uuid",
+            "mails",
+            "mail_uuids",
+        ]

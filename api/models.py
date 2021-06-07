@@ -111,3 +111,29 @@ class Application(models.Model):
     applied_to_date = models.DateField()
     # event that the applicant wants to work at
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+
+class Mail(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
+    
+    sender = models.ForeignKey(MyUser, on_delete=models.PROTECT, null=True, default=None)
+    recipient = models.ForeignKey(RegisteredStaff, on_delete=models.CASCADE)
+    
+    is_sent = models.BooleanField(default=False)
+    sent_at_datetime = models.DateTimeField(null=True, blank=True)
+    
+    content = models.TextField(default="")
+    
+    
+class MailTemplate(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
+    name = models.CharField(max_length=200)
+    template = models.TextField()
+    
+
+class MailsForEvent(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
+    event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="mails")
+    
+    default_template = models.ForeignKey(MailTemplate, null=True, blank=True, on_delete=models.SET_NULL)
+    mails = models.ManyToManyField(Mail)  # mails created with this object's data

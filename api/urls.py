@@ -14,6 +14,9 @@ router.register(r"position-data", PositionDataViewSet)
 router.register(r"positions", PositionViewSet)
 router.register(r"position-groups", PositionGroupViewSet)
 router.register(r"events", EventViewSet)
+router.register(r"mails", MailViewSet)
+router.register(r"mail-templates", MailTemplateViewSet)
+router.register(r"mails-for-events", MailsForEventViewSet)
 
 urlpatterns = router.urls + [
     path("set-csrf-token/", set_csrf_token),
@@ -23,5 +26,7 @@ urlpatterns = router.urls + [
     path("login/", login_view, name="login"),
     path("check-user/", is_logged_in, name="check_user"),
     path("logout/", logout_view, name="logout"),
-    path("available-staffs/", AvailableStaffsView.as_view(), name="available staffs")
+    path("available-staffs/", AvailableStaffsView.as_view(), name="available staffs"),
+    path("get-mails-for-event/", GetOrCreateMailsForEventOfEventView.as_view(), name="get mails for event"),
+    path("send-mail/", MailSenderView.as_view(), name="send mail"),
 ]
