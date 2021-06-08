@@ -248,6 +248,7 @@ class MailsForEventSerializer(serializers.ModelSerializer):
     default_template = MailTemplateSerializer(read_only=True)
     default_template_uuid = serializers.PrimaryKeyRelatedField(
         queryset=MailTemplate.objects.all(),
+        required=False,
         source="default_template",
         write_only=True,
     )
