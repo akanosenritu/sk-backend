@@ -1,24 +1,27 @@
 import json
+from idlelib.idle_test.mock_idle import Func
 
-import jwt
-from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.aggregates import ArrayAgg, StringAgg
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, BadHeaderError
+from django.db.models import Value, F, TextField, Sum, Count, Case, When, Q, Subquery, OuterRef
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
+from django_filters import rest_framework as filters
 from rest_framework import viewsets, status, views, permissions
-from rest_framework.generics import get_object_or_404
+from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404, ListAPIView
 from rest_framework.response import Response
+from rest_framework.generics import RetrieveAPIView
 
 from api.filters import EventFilter
 from api.models import *
 from api.serializers import RegisteredStaffSerializer, ClothesSettingSerializer, GatheringPlaceSettingSerializer, \
     PositionDataSerializer, PositionSerializer, PositionGroupSerializer, EventSerializer, EmployeeSerializer, \
     GenderSerializer, MyUserSerializer, MailSerializer, MailsForEventSerializer, MailTemplateSerializer
-from skbackend import settings
 
 
 class GenderViewSet(viewsets.ModelViewSet):
@@ -32,8 +35,20 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     
 
 class RegisteredStaffViewSet(viewsets.ModelViewSet):
-    queryset = RegisteredStaff.objects.all()
+    queryset = RegisteredStaff.objects.all().order_by("staff_id")
     serializer_class = RegisteredStaffSerializer
+    
+    @action(detail=False, methods=["get"])
+    def is_this_staff_id_available(self, request):
+        potential_staff_id = request.query_params.get("staff_id", None)
+        if not potential_staff_id:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={"staff_id": "staff_id is missing."})
+        
+        staffs = RegisteredStaff.objects.filter(staff_id=potential_staff_id)
+        if staffs:
+            return Response(status=status.HTTP_200_OK, data={"is_available": False})
+        else:
+            return Response(status=status.HTTP_200_OK, data={"is_available": True})
     
     
 class ClothesSettingViewSet(viewsets.ModelViewSet):
@@ -64,7 +79,8 @@ class PositionGroupViewSet(viewsets.ModelViewSet):
 class EventViewSet(viewsets.ModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
-    filter_class = [EventFilter]
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = EventFilter
 
 
 @ensure_csrf_cookie
@@ -300,12 +316,3 @@ class MailSenderView(views.APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={"header": "invalid header found."})
         
         return Response(status=status.HTTP_200_OK, data={"success": "mail has been sent."})
-
-
-class CheckIsMailSendableView(views.APIView):
-    def get(self, request):
-        data = request.data
-    
-        #  extract all necessary information from request
-        recipient_staff_uuid = data.get("recipient_staff_uuid", None)
-        event_uuid = data.get("event_uuid", None)

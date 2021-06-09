@@ -18,7 +18,7 @@ router.register(r"mails", MailViewSet)
 router.register(r"mail-templates", MailTemplateViewSet)
 router.register(r"mails-for-events", MailsForEventViewSet)
 
-urlpatterns = router.urls + [
+urlpatterns = [
     path("set-csrf-token/", set_csrf_token),
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
@@ -29,4 +29,4 @@ urlpatterns = router.urls + [
     path("available-staffs/", AvailableStaffsView.as_view(), name="available staffs"),
     path("get-mails-for-event/", GetOrCreateMailsForEventOfEventView.as_view(), name="get mails for event"),
     path("send-mail/", MailSenderView.as_view(), name="send mail"),
-]
+] + router.urls

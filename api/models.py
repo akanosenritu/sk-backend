@@ -117,7 +117,7 @@ class Mail(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
     
     sender = models.ForeignKey(MyUser, on_delete=models.PROTECT, null=True, default=None)
-    recipient = models.ForeignKey(RegisteredStaff, on_delete=models.CASCADE)
+    recipient = models.ForeignKey(RegisteredStaff, on_delete=models.CASCADE, related_name="mail")
     
     is_sent = models.BooleanField(default=False)
     sent_at_datetime = models.DateTimeField(null=True, blank=True)
@@ -135,5 +135,6 @@ class MailsForEvent(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, primary_key=True, unique=True)
     event = models.OneToOneField(Event, on_delete=models.CASCADE, related_name="mails")
     
+    confirm_date_limit = models.DateTimeField(null=True, blank=True)
     default_template = models.ForeignKey(MailTemplate, null=True, blank=True, on_delete=models.SET_NULL)
-    mails = models.ManyToManyField(Mail)  # mails created with this object's data
+    mails = models.ManyToManyField(Mail, related_name="event")  # mails created with this object's data

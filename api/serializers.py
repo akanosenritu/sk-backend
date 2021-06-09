@@ -268,6 +268,7 @@ class MailsForEventSerializer(serializers.ModelSerializer):
             "event_uuid",
             "default_template",
             "default_template_uuid",
+            "confirm_date_limit",
             "mails",
             "mail_uuids",
         ]
