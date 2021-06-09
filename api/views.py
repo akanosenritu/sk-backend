@@ -1,5 +1,4 @@
 import json
-from idlelib.idle_test.mock_idle import Func
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
